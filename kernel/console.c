@@ -132,10 +132,16 @@ consoleread(int user_dst, uint64 dst, int n)
 // do erase/kill processing, append to cons.buf,
 // wake up consoleread() if a whole line has arrived.
 //
+
+// Add the functionality of the syscall
+int kbd_intr_count = 0;
+
 void
 consoleintr(int c)
 {
   acquire(&cons.lock);
+  // Increment the variable everytime a key is pres
+  kbd_intr_count++;
 
   switch(c){
   case C('P'):  // Print process list.

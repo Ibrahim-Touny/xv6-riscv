@@ -22,6 +22,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+// Add syscall Function
+int kbdint(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

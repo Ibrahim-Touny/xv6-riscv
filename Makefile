@@ -18,6 +18,8 @@ OBJS = \
   $K/trap.o \
   $K/syscall.o \
   $K/sysproc.o \
+  # Because we cratead a new sysfile we must add it here to get compiled
+  $K/sysutil.o \
   $K/bio.o \
   $K/fs.o \
   $K/log.o \
@@ -139,6 +141,10 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
+	# Add Command Files
+	$U/_add\
+	$U/_sleep\
+	$U/_kbdint\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
