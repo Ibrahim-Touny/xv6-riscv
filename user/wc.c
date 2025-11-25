@@ -5,6 +5,9 @@
 
 char buf[512];
 
+// global flags so wc function can access them
+int lflag = 0, wflag = 0, cflag = 0, Lflag = 0;
+
 void wc(int fd, char *name)
 {
   int i, n;
@@ -48,6 +51,11 @@ void wc(int fd, char *name)
       }
     }
   }
+
+  // Handle file that doesn't end with newline
+  if(Li > 0 && Li > L)
+    L = Li;
+
   // If read() returned a negative value, something went wrong.
   // Print an error message and exit the program.
   if(n < 0)
@@ -56,8 +64,12 @@ void wc(int fd, char *name)
     exit(1);
   }
 
-  // Print line count, word count, character count, longest line length, and the file name.
-  printf("%d %d %d %d %s\n", l, w, c, L, name);
+  // Print only selected flags
+  if(lflag) printf("%d ", l);
+  if(wflag) printf("%d ", w);
+  if(cflag) printf("%d ", c);
+  if(Lflag) printf("%d ", L);
+  printf("%s\n", name);
 }
 
 int main(int argc, char *argv[])
@@ -71,8 +83,30 @@ int main(int argc, char *argv[])
     exit(0);
   }
 
+  // Parse flags
+  for(i = 1; i < argc && argv[i][0] == '-'; i++){
+    char *p = argv[i] + 1;   // to skip '-'
+    while(*p){
+        if(*p == 'l') lflag = 1;
+        else if(*p == 'w') wflag = 1;
+        else if(*p == 'c') cflag = 1;
+        else if(*p == 'L') Lflag = 1;
+        else {
+            printf("wc: unknown option %c\n", *p);
+            exit(1);
+        }
+        p++;
+    }
+  }
+
+  // If no flags were given, use default: -lwc
+  if(!lflag && !wflag && !cflag && !Lflag){
+    lflag = wflag = cflag = 1;
+  }
+
   // Otherwise, loop through each filename passed in argv[]
-  for(i = 1; i < argc; i++){
+  for(; i < argc; i++) // loop from previous i to end of argc
+  {
 
     // Try to open the file in read-only mode.
     // open() returns a file descriptor, or -1 if it failed.
