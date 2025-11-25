@@ -144,6 +144,7 @@ UPROGS=\
 	$U/_add\
 	$U/_sleep\
 	$U/_kbdint\
+	$U/_touch\
 # Add Command Files up to UPROGS
 
 fs.img: mkfs/mkfs README $(UPROGS)
