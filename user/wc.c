@@ -8,6 +8,10 @@ char buf[512];
 // global flags so wc function can access them
 int lflag = 0, wflag = 0, cflag = 0, Lflag = 0;
 
+int total_l = 0, total_w = 0, total_c = 0, total_L = 0;
+int file_count = 0;
+
+
 void wc(int fd, char *name)
 {
   int i, n;
@@ -64,6 +68,13 @@ void wc(int fd, char *name)
     exit(1);
   }
 
+  // Update total counts
+  total_l += l;
+  total_w += w;
+  total_c += c;
+  if(L > total_L) total_L = L;
+  file_count++;
+
   // Print only selected flags
   if(lflag) printf("%d ", l);
   if(wflag) printf("%d ", w);
@@ -80,6 +91,16 @@ int main(int argc, char *argv[])
   // read from standard input (fd = 0).
   if(argc <= 1){
     wc(0, "");   // name is empty because stdin has no filename
+    exit(0);
+  }
+
+  if(argc >= 2 && strcmp(argv[1], "?") == 0){
+    printf("Usage: wc [-lwcL] [file...]\n");
+    printf("  -l : print line counts\n");
+    printf("  -w : print word counts\n");
+    printf("  -c : print character counts\n");
+    printf("  -L : print length of longest line\n");
+    printf("Output: LineCount WordCount CharacterCount LongestLineLength FileName\n");
     exit(0);
   }
 
@@ -120,6 +141,14 @@ int main(int argc, char *argv[])
 
     // Close the file descriptor after use
     close(fd);
+  }
+  // If more than one file was processed, print total counts
+  if(file_count > 1){
+    if(lflag) printf("%d ", total_l);
+    if(wflag) printf("%d ", total_w);
+    if(cflag) printf("%d ", total_c);
+    if(Lflag) printf("%d ", total_L);
+    printf("total\n");
   }
 
   exit(0);  // End program
