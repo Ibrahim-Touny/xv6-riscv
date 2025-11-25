@@ -14,16 +14,16 @@ int main(int argc, char *argv[])
         printf("Usage: cp source_file destination_file\n");
         exit(1);
     }
-    // if(strchr(argv[1], '.')==0)
-    // {
-    //   printf("cp: source file must contain a dot '.'\n");
-    //   exit(1);
-    // }
-    //  if(strchr(argv[2], '.')==0)
-    // {
-    //   printf("cp: destination file must contain a dot '.'\n");
-    //   exit(1);
-    // }
+    if(strchr(argv[1], '.')==0)
+    {
+      printf("cp: source file must contain a dot '.'\n");
+      exit(1);
+    }
+     if(strchr(argv[2], '.')==0)
+    {
+      printf("cp: destination file must contain a dot '.'\n");
+      exit(1);
+    }
 
 
     // Open source file (read-only)
