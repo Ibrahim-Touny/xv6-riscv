@@ -16,17 +16,23 @@ int main(int argc, char *argv[])
   }
   // benshof el awel el dest directory wala file fa bnecheck aal directory el awel alashan el default file
   //struct stat betakhod ma3lomat 3an el file zay en kan directory aw file w size
-  struct stat st;
+  struct stat st_src, st_dst;
 
 
   //stat byakhod esm el file w structure w bymlla el structure b ma3lomat 3an el file
   //law el stat raga3 >= 0 ya3ni el file mawgod w el st.type byshof en kan directory aw file
   //el stat btraga3 zero law eshtaghal w negative law feh moshkela
-  if(stat(argv[1], &st) < 0){
-    printf("Error: source or destination do not exist\n");
+  if(stat(argv[1], &st_src) < 0){
+    printf("Error: source does not exist\n");
     exit(1);
 }
-  if(stat(argv[2], &st) >= 0 && st.type == T_DIR){
+  if( stat(argv[2], &st_dst) >= 0 && st_dst.type == T_FILE){
+      if(unlink(argv[2]) < 0){
+          printf("Error: cannot remove existing destination file %s\n", argv[2]);
+          exit(1);
+      }
+  }
+  if(stat(argv[2], &st_dst) >= 0 && st_dst.type == T_DIR){
     // law el destination howa directory lazm n3mel concatenate ben el source file w el destination directory alashan netala3 el path eli hanen2el feh el file
     char newpath[100];
 
