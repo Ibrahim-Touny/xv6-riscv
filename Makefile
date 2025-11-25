@@ -148,6 +148,7 @@ UPROGS=\
 	$U/_mv\
 	$U/_cp\
 	$U/_tail\
+	$U/_find\
 # Add Command Files up to UPROGS
 
 fs.img: mkfs/mkfs README $(UPROGS)
