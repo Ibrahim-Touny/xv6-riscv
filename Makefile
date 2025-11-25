@@ -18,7 +18,6 @@ OBJS = \
   $K/trap.o \
   $K/syscall.o \
   $K/sysproc.o \
-  # Because we cratead a new sysfile we must add it here to get compiled
   $K/sysutil.o \
   $K/bio.o \
   $K/fs.o \
@@ -30,7 +29,9 @@ OBJS = \
   $K/sysfile.o \
   $K/kernelvec.o \
   $K/plic.o \
-  $K/virtio_disk.o
+  $K/virtio_disk.o \
+  $K/sysutil.o
+# Because we created a new sysfile we must add it here to OBJS to get compiled
 
 # riscv64-unknown-elf- or riscv64-linux-gnu-
 # perhaps in /opt/riscv/bin
@@ -141,10 +142,10 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
-	# Add Command Files
 	$U/_add\
 	$U/_sleep\
 	$U/_kbdint\
+# Add Command Files up to UPROGS
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
