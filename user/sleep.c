@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
   }
 
   printf("Starting sleep for %d\n", sleeptime);
+  //byndah system call sleep w byeb3atlo el sleeptime eli howa el number eli dakhelna alashan ysleep milli seconds
   sleep(sleeptime);
   printf("Finished sleeping\n");
 
