@@ -147,8 +147,8 @@ UPROGS=\
 	$U/_touch\
 	$U/_mv\
 	$U/_cp\
-	$U/_tail\
 	$U/_find\
+	$U/_diff\
 # Add Command Files up to UPROGS
 
 fs.img: mkfs/mkfs README $(UPROGS)
