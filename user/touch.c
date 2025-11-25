@@ -20,10 +20,23 @@ main(int argc, char *argv[])
   //open btakhod esm el file wl mode
   //feh mode read only w write only w create w read w write
   //el function betraga3 positive number law elmatlob fl flag et3amal w negative law error
-  int fd = open(argv[1], O_CREATE);
-  if(fd < 0) {
-    printf("Error: cannot create,open file ror file already created %s\n", argv[1]);
+  //hawel tfta7 el file eli esmo argv[1] b mode read only alashan nshofo mawgod wala la
+  int fd = open(argv[1], O_RDONLY);
+  //law raga3 positive integer ya3ni el file descriptor mahgoz lel file fa howa already mawgod
+  if(fd>=0){
+    printf("file already exists\n");
+    close(fd);
+    exit(0);
+  }else{
+    //law raga3 negative ya3ni el file msh mawgod fa hancreate file gedid b esm argv[1]
+    fd = open(argv[1], O_CREATE);
+    //law fe ay error khareg aan eradetna
+    if(fd < 0) {
+    printf("Error: cannot create or open file  %s\n", argv[1]);
+    //hyexit el program b error code mokhtalef alashan ne3raf nfara2 ben el normal aw la
     exit(1);
+    }
+    printf("File %s created successfully\n", argv[1]);
   }
   //close file baad ma etaamalo create alashan el resource allocation w aalshan el descriptor yerga3 fady
   close(fd);
