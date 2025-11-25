@@ -25,14 +25,16 @@ int main(int argc, char *argv[])
   if(stat(argv[1], &st_src) < 0){
     printf("Error: source does not exist\n");
     exit(1);
-}
-  //law el destination mawgood w howa file lazm nms7o abl ma n3mel link alashan link mabyed5olsh fel file el mawgood
-  if( stat(argv[2], &st_dst) >= 0 && st_dst.type == T_FILE){
-      if(unlink(argv[2]) < 0){
-          printf("Error: cannot remove existing destination file %s\n", argv[2]);
-          exit(1);
-      }
   }
+  //law el destination mawgood w howa file unlink (remove) el destination file abl ma n3mel link alashan el link mabyed5olsh fel file el mawgood
+if(stat(argv[2], &st_dst) >= 0 && st_dst.type == T_FILE){
+  //unlink bymsh el file eli esmo argv[2] w byraga3 zero law eshtaghal w negative law feh moshkela
+    if(unlink(argv[2]) < 0){
+        printf("Error: cannot overwrite %s\n", argv[2]);
+        exit(1);
+    }
+}
+
   if(stat(argv[2], &st_dst) >= 0 && st_dst.type == T_DIR){
     // law el destination howa directory lazm n3mel concatenate ben el source file w el destination directory alashan netala3 el path eli hanen2el feh el file
     char newpath[100];
