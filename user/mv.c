@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     printf("Error: source does not exist\n");
     exit(1);
 }
+  //law el destination mawgood w howa file lazm nms7o abl ma n3mel link alashan link mabyed5olsh fel file el mawgood
   if( stat(argv[2], &st_dst) >= 0 && st_dst.type == T_FILE){
       if(unlink(argv[2]) < 0){
           printf("Error: cannot remove existing destination file %s\n", argv[2]);
