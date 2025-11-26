@@ -24,6 +24,7 @@ main(int argc, char *argv[])
   //hnopen el two files w ne2rahom byte by byte w ncompare benhom (elflag read only)
   int fd1 = open(argv[1], O_RDONLY);
   int fd2 = open(argv[2], O_RDONLY);
+  int differs = 0;
   //check el files etfataho wala la
   if(fd1 < 0 || fd2 < 0){
     printf("Error: cannot open one of the files\n");
@@ -65,17 +66,33 @@ main(int argc, char *argv[])
 
     // Compare compare kol line feh w law feh ekhtelaf nprint el ekhtelaf w nexit
     if (strcmp(line1, line2) != 0) {
-        printf("line %d\n differs", line_num);
-        printf("< %s", line1);
+        // If one file ends but the other continues → different-length files
+      if (n1 == 0 && n2 > 0) {
+        printf("line %d only differs at %s\n", line_num,argv[1]);
         printf("> %s", line2);
+        differs = 1;
         break;
     }
-    //increment el line number kol ma ne2ra line
+
+    if (n2 == 0 && n1 > 0) {
+        printf("line %d only differs at %s\n", line_num,argv[2]);
+        printf("< %s", line1);
+        differs = 1;
+        break;
+    }
+        printf("line %d differs\n", line_num);
+        printf("< %s", line1);
+        printf("> %s", line2);
+        differs=1;
+    }
+    //increment el line number kol ma ne2ra line alshan nedkhol 3ali baado
     line_num++;
-}
-   printf("Files are identical\n");
-   close(fd1);
-   close(fd2);
       }
+      if(differs==0)
+       printf("Files are identical\n");
+
+    close(fd1);
+   close(fd2);
   exit(0);
+    }
 }
