@@ -5,6 +5,7 @@
 #include "riscv.h"
 #include "defs.h"
 #include "fs.h"
+//howa dh el magic number lel shutdown fl qemu
 #define QEMU_SHUTDOWN 0x100000
 /*
  * the kernel's page table.
@@ -43,6 +44,7 @@ kvmmake(void)
   // the highest virtual address in the kernel.
   kvmmap(kpgtbl, TRAMPOLINE, (uint64)trampoline, PGSIZE, PTE_R | PTE_X);
 
+  //3araf port el shutdown fl qemu w baa fel kernel virtual memory(pagetable)
   kvmmap(kpgtbl, QEMU_SHUTDOWN, QEMU_SHUTDOWN, PGSIZE, PTE_R | PTE_W);
   // allocate and map a kernel stack for each process.
   proc_mapstacks(kpgtbl);

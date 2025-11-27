@@ -37,8 +37,16 @@ uint64 sys_random(void)
 uint64
 sys_shutdown(void)
 {
+  //0x10000 This is a physical memory addres eli aamalnalo define f vm.c momken yebaa ay haga tanya free(port)
+  //this address triggers a shutdown of the emulated machine
+  //el unit32* dh alashan el port da 32-bit fa lazm n3mel cast lel address deh 3ashan nektb feh
+  //volatile alashan ne2ol lel compiler en el value deh momken yetghayar barra 3an taree2 el program fa may3melsh optimization 3aleha wa
+  //ela msh hatetnafez alashan ehna shaghaleen memory-mapped I/O msh ram
+  //el * eli bara deh 3ashan nektb fe el address deh
+  //lama benhot 5555 eli m3arafenha f vm.c fel address dh blzat kaeno bytlob meno yshutdown
   (*(volatile uint32 *) 0x100000) = 0x5555;
-
+  //panic btkhaly el system yhalt safely mn gher ma yfdal y1ol panic:kerneltrap w yetba3 el message deh law fe error
   panic("sys_shutdown: shutdown failed");
+  //law shelna el retrun byhsal error lazem tkon mawgoda hata law msh hanewsallaha
   return 0;
 }
