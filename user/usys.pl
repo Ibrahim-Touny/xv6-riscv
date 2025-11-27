@@ -39,3 +39,4 @@ entry("uptime");
 # Add syscall entry
 entry("kbdint");
 entry("random");
+entry("shutdown");

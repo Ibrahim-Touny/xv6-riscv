@@ -1,7 +1,13 @@
 // Create new sysutil file for system utilities
 // functions could have been added to other sys files but here better for clarity
 #include "types.h"
-
+#include "param.h"
+#include "memlayout.h"
+#include "riscv.h"
+#include "spinlock.h"
+#include "proc.h"
+#include "syscall.h"
+#include "defs.h"
 // variable to hold keyboard interrupt count
 extern int kbd_intr_count;
 
@@ -26,4 +32,15 @@ uint64 sys_random(void)
     //w 2^31 dh akbar rakam momken n storo f unsigned int 32-bit abl el overflow
     rand_seed = (1103515245 * rand_seed + 12345) & 0x7fffffff;
     return rand_seed;
+}
+#define SHUTDOWN_ADDR 0x100000
+#define SHUTDOWN_SIZE 0x1000
+
+uint64
+sys_shutdown(void)
+{
+  (*(volatile uint32 *) 0x100000) = 0x5555;
+
+  panic("sys_shutdown: shutdown failed");
+  return 0;
 }

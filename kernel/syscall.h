@@ -23,3 +23,4 @@
 // Create unique identifier with unique number for syscall
 #define SYS_kbdint 22
 #define SYS_random   23
+#define SYS_shutdown  24
