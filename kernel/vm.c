@@ -5,7 +5,7 @@
 #include "riscv.h"
 #include "defs.h"
 #include "fs.h"
-
+#define QEMU_SHUTDOWN 0x100000
 /*
  * the kernel's page table.
  */

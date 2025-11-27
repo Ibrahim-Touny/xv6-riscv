@@ -33,8 +33,6 @@ uint64 sys_random(void)
     rand_seed = (1103515245 * rand_seed + 12345) & 0x7fffffff;
     return rand_seed;
 }
-#define SHUTDOWN_ADDR 0x100000
-#define SHUTDOWN_SIZE 0x1000
 
 uint64
 sys_shutdown(void)
