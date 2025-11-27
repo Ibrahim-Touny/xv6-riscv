@@ -24,7 +24,7 @@ int sleep(int);
 int uptime(void);
 // Add syscall Function
 int kbdint(void);
-
+int random(void);
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);
