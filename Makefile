@@ -151,6 +151,7 @@ UPROGS=\
 	$U/_diff\
 	$U/_random\
 	$U/_shutdown\
+	$U/_fact\
 # Add Command Files up to UPROGS
 
 fs.img: mkfs/mkfs README $(UPROGS)
