@@ -26,6 +26,8 @@ int uptime(void);
 int kbdint(void);
 int random(void);
 int shutdown(void);
+int getppid(void);
+
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

@@ -40,3 +40,4 @@ entry("uptime");
 entry("kbdint");
 entry("random");
 entry("shutdown");
+entry("getppid");
