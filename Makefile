@@ -154,6 +154,8 @@ UPROGS=\
 	$U/_fact\
 	$U/_tail\
 	$U/_getppid\
+	$U/_countsyscall\
+
 # Add Command Files up to UPROGS
 
 fs.img: mkfs/mkfs README $(UPROGS)

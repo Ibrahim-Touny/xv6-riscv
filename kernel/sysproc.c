@@ -97,3 +97,11 @@ sys_getppid(void)
     struct proc *p = myproc();
     return p->parent->pid;
 }
+
+extern int total_syscalls;
+uint64
+
+sys_countsyscall(void)
+{
+    return total_syscalls;
+}

@@ -7,6 +7,8 @@
 #include "syscall.h"
 #include "defs.h"
 
+int total_syscalls = 0;
+
 // Fetch the uint64 at addr from the current process.
 int
 fetchaddr(uint64 addr, uint64 *ip)
@@ -106,6 +108,8 @@ extern uint64 sys_kbdint(void);
 extern uint64  sys_random(void);
 extern uint64 sys_shutdown(void);
 extern uint64 sys_getppid(void);
+extern uint64 sys_countsyscall(void);
+
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
 static uint64 (*syscalls[])(void) = {
@@ -135,6 +139,8 @@ static uint64 (*syscalls[])(void) = {
 [SYS_random]  sys_random,
 [SYS_shutdown] sys_shutdown,
 [SYS_getppid]    sys_getppid,
+[SYS_countsyscall] sys_countsyscall,
+
 
 };
 
@@ -145,6 +151,7 @@ syscall(void)
   struct proc *p = myproc();
 
   num = p->trapframe->a7;
+  total_syscalls++;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     // Use num to lookup the system call function for num, call it,
     // and store its return value in p->trapframe->a0

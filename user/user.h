@@ -27,6 +27,7 @@ int kbdint(void);
 int random(void);
 int shutdown(void);
 int getppid(void);
+int countsyscall(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
