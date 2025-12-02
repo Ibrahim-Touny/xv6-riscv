@@ -28,6 +28,7 @@ int random(void);
 int shutdown(void);
 int getppid(void);
 int countsyscall(void);
+int uptime(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
