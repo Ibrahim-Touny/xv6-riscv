@@ -156,6 +156,7 @@ UPROGS=\
 	$U/_getppid\
 	$U/_countsyscall\
 	$U/_uptime\
+	$U/_schedtest\
 
 
 # Add Command Files up to UPROGS
