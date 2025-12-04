@@ -8,6 +8,13 @@
 #include "proc.h"
 #include "syscall.h"
 #include "defs.h"
+#include "datetime.h"
+
+// will work without this but to remove the error
+#ifndef BOOT_EPOCH
+#define BOOT_EPOCH
+#endif
+
 // variable to hold keyboard interrupt count
 extern int kbd_intr_count;
 
@@ -48,5 +55,12 @@ sys_shutdown(void)
   //panic btkhaly el system yhalt safely mn gher ma yfdal y1ol panic:kerneltrap w yetba3 el message deh law fe error
   panic("sys_shutdown: shutdown failed");
   //law shelna el retrun byhsal error lazem tkon mawgoda hata law msh hanewsallaha
+  return 0;
+}
+
+uint64
+sys_datetime(void)
+{
+
   return 0;
 }
