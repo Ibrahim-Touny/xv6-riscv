@@ -80,6 +80,9 @@ ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]nopie'),)
 CFLAGS += -fno-pie -nopie
 endif
 
+# Add DateTime syscall support
+CFLAGS += -DBOOT_EPOCH=$(shell date +%s)
+
 LDFLAGS = -z max-page-size=4096
 
 $K/kernel: $(OBJS) $K/kernel.ld $U/initcode
@@ -156,6 +159,7 @@ UPROGS=\
 	$U/_getppid\
 	$U/_countsyscall\
 	$U/_uptime\
+	$U/_datetime\
 	$U/_schedtest\
 
 

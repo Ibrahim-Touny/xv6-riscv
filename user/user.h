@@ -29,6 +29,7 @@ int shutdown(void);
 int getppid(void);
 int countsyscall(void);
 int uptime(void);
+int datetime(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
