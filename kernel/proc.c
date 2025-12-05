@@ -462,10 +462,19 @@ struct proc *choose_next_process() {
         return p;
       }
   }
-  // else if (sched_mode == SCHED_FCFS) {
-  //   // TODO
-  //   return p;
-  // }
+
+
+   else if (sched_mode == SCHED_FCFS) {
+      int creation_time_current=10000;
+      struct proc *firstcomeproc;
+     for(p = proc; p < &proc[NPROC]; p++) {
+      if (p->state == RUNNABLE)
+        if(p->creation_time  < creation_time_current)
+        creation_time_current=p->creation_time;
+        firstcomeproc=p;
+      }
+     return firstcomeproc;
+  }
 
     if(sched_mode == SCHED_PRIORITY_BASED) {
       //el priority eli hatgetheseb aala 7asab kam el wa2t eli el process shaghala feeh
