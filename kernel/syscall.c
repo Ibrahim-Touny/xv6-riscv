@@ -103,7 +103,7 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
-// Declate syscall
+// Declare syscall
 extern uint64 sys_kbdint(void);
 extern uint64  sys_random(void);
 extern uint64 sys_shutdown(void);
@@ -111,6 +111,7 @@ extern uint64 sys_getppid(void);
 extern uint64 sys_countsyscall(void);
 extern uint64 sys_uptime(void);
 extern uint64 sys_datetime(void);
+extern uint64 sys_getptable(void);
 
 
 // An array mapping syscall numbers from syscall.h
@@ -145,8 +146,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_countsyscall] sys_countsyscall,
 [SYS_uptime] sys_uptime,
 [SYS_datetime] sys_datetime,
-
-
+[SYS_getptable] sys_getptable,
 };
 
 void

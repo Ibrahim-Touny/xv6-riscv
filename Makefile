@@ -156,7 +156,6 @@ UPROGS=\
 	$U/_shutdown\
 	$U/_fact\
 	$U/_tail\
-	$U/_getppid\
 	$U/_countsyscall\
 	$U/_uptime\
 	$U/_datetime\

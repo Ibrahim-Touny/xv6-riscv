@@ -112,3 +112,8 @@ sys_uptime(void)
 {
     return ticks;
 }
+
+// get process table system call
+int sys_getptable(int nproc, char *buffer){
+  return 0;
+}

@@ -43,3 +43,4 @@ entry("shutdown");
 entry("getppid");
 entry("countsyscall");
 entry("datetime");
+entry("getptable");
