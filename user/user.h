@@ -33,6 +33,7 @@ int countsyscall(void);
 int uptime(void);
 int datetime(struct datetime *dt);
 int getptable(int nproc, char *buffer);
+int setsched(int mode);
 
 // ulib.c
 int stat(const char*, struct stat*);

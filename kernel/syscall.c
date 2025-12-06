@@ -112,6 +112,7 @@ extern uint64 sys_countsyscall(void);
 extern uint64 sys_uptime(void);
 extern uint64 sys_datetime(void);
 extern uint64 sys_getptable(void);
+extern uint64 sys_setsched(void);
 
 
 // An array mapping syscall numbers from syscall.h
@@ -147,6 +148,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_uptime] sys_uptime,
 [SYS_datetime] sys_datetime,
 [SYS_getptable] sys_getptable,
+[SYS_setsched] sys_setsched,
 };
 
 void

@@ -161,6 +161,7 @@ UPROGS=\
 	$U/_datetime\
 	$U/_schedtest\
 	$U/_ps\
+	$U/_setsched\
 
 
 # Add Command Files up to UPROGS

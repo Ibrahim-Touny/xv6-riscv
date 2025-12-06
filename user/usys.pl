@@ -44,3 +44,4 @@ entry("getppid");
 entry("countsyscall");
 entry("datetime");
 entry("getptable");
+entry("setsched");

@@ -6,6 +6,11 @@
 #include "spinlock.h"
 #include "proc.h"
 
+// Scheduler mode constants
+#define SCHED_ROUND_ROBIN 0
+#define SCHED_FCFS        1
+#define SCHED_PRIORITY_BASED    2
+
 uint64
 sys_exit(void)
 {
@@ -126,4 +131,21 @@ sys_getptable(void)
   argaddr(1, &buf);
 
   return getptable(nproc, buf);
+}
+
+uint64
+sys_setsched(void)
+{
+  int mode;
+  extern int sched_mode;
+
+  argint(0, &mode);
+
+  // Validate scheduler mode
+  if(mode < SCHED_ROUND_ROBIN || mode > SCHED_PRIORITY_BASED) {
+    return -1;  // Invalid mode
+  }
+
+  sched_mode = mode;
+  return 0;  // Success
 }
