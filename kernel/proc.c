@@ -168,6 +168,7 @@ found:
   p->run_time = 0;
   p->completion_time = 0;
   p->priority = PRIORITY;
+  p->sched_mode = sched_mode; // tag with current scheduler mode
   return p;
 }
 
@@ -348,6 +349,7 @@ fork(void)
 
   //law fe child process byakhdo priority aboh w omoh (parent)
   np->priority = p->priority;
+  np->sched_mode = sched_mode; // inherit current global scheduler selection
   return pid;
 }
 
@@ -670,6 +672,7 @@ scheduler(void)
       acquire(&p->lock);
 
       if (p->state == RUNNABLE) {
+        p->sched_mode = sched_mode; // remember which scheduler ran this process
         p->state = RUNNING;
         c->proc = p;
         swtch(&c->context, &p->context);
