@@ -160,6 +160,7 @@ UPROGS=\
 	$U/_uptime\
 	$U/_datetime\
 	$U/_schedtest\
+	$U/_ps\
 
 
 # Add Command Files up to UPROGS

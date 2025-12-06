@@ -94,26 +94,36 @@ sys_kill(void)
 uint64
 sys_getppid(void)
 {
-    struct proc *p = myproc();
-    return p->parent->pid;
+  struct proc *p = myproc();
+  return p->parent->pid;
 }
 
 extern int total_syscalls;
 uint64
-
 sys_countsyscall(void)
 {
-    return total_syscalls;
+  return total_syscalls;
 }
 extern uint ticks;
 
 uint64
 sys_uptime(void)
 {
-    return ticks;
+  return ticks;
 }
 
 // get process table system call
-int sys_getptable(int nproc, char *buffer){
-  return 0;
+uint64
+sys_getptable(void)
+{
+  int nproc;
+  uint64 buf;
+
+  // get first argument (number of processes)
+  argint(0, &nproc);
+
+  // get second argument (pointer to buffer)
+  argaddr(1, &buf);
+
+  return getptable(nproc, buf);
 }

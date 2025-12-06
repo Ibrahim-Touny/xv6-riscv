@@ -108,12 +108,3 @@ struct proc {
   uint run_time;               // How long the process has run
   uint priority;               // Process priority yasmine eli aamlah gad3ana mn aandaha
 };
-
-// process table
-struct ptable {
-    int pid;
-    int ppid;
-    int state;
-    uint64 sz; // memory size
-    char name[16]; 
-};

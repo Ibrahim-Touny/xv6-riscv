@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "ptable.h" // include the ptable struct definition
 
 // schedular constants to set the scheduling mode
 #define SCHED_ROUND_ROBIN 0
@@ -463,16 +464,16 @@ struct proc *choose_next_process() {
       }
   }
 
-
-   else if (sched_mode == SCHED_FCFS) {
+    if (sched_mode == SCHED_FCFS) {
       int creation_time_current=10000;
-      struct proc *firstcomeproc;
+      struct proc *firstcomeproc = 0;
      for(p = proc; p < &proc[NPROC]; p++) {
-      if (p->state == RUNNABLE)
+      if(p->state == RUNNABLE){
         if(p->creation_time  < creation_time_current)
         creation_time_current=p->creation_time;
         firstcomeproc=p;
       }
+    }
      return firstcomeproc;
   }
 
@@ -503,6 +504,54 @@ struct proc *choose_next_process() {
 
   return 0;
 }
+
+// Copy process table to user buffer, return 1 on success, 0 on failure
+int
+getptable(int nproc, uint64 ubuf)
+{
+  struct proc *p;
+  struct proc *curr = myproc();   // current running process
+  struct ptable kpt[NPROC];       // temp kernel buffer
+  int count = 0;
+
+  if(nproc < 1)
+    return 0;
+
+  memset(kpt, 0, sizeof(kpt));
+
+  // walk the process table
+  for(p = proc; p < &proc[NPROC] && count < nproc; p++) {
+    acquire(&p->lock);
+
+    if(p->state != UNUSED) {
+      kpt[count].pid   = p->pid;
+      kpt[count].state = p->state;
+      kpt[count].sz    = p->sz;
+
+      if(p->parent)
+        kpt[count].ppid = p->parent->pid;
+      else
+        kpt[count].ppid = 0;
+
+      safestrcpy(kpt[count].name, p->name, sizeof(kpt[count].name));
+
+      count++;
+    }
+
+    release(&p->lock);
+  }
+
+  // copy the data to user buffer
+  if(copyout(curr->pagetable,
+             ubuf,
+             (char*)kpt,
+             count * sizeof(struct ptable)) < 0) {
+    return 0;   // failed to write to user memory
+  }
+
+  return 1;  // success
+}
+
 
 void
 update_time()
