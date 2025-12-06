@@ -29,3 +29,4 @@
 #define SYS_datetime  27
 #define SYS_getptable  28
 #define SYS_setsched  29
+#define SYS_perfmetrics  30

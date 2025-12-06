@@ -5,6 +5,7 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "perfmetrics.h"
 
 // Scheduler mode constants
 #define SCHED_ROUND_ROBIN 0
@@ -147,5 +148,22 @@ sys_setsched(void)
   }
 
   sched_mode = mode;
+  return 0;  // Success
+}
+
+uint64
+sys_perfmetrics(void)
+{
+  uint64 addr;
+  struct perfmetrics pm;
+
+  argaddr(0, &addr);  // Get user buffer address
+
+  perfmetrics(&pm);  // Calculate the metrics
+
+  // Copy to user space
+  if(copyout(myproc()->pagetable, addr, (char*)&pm, sizeof(pm)) < 0)
+      return -1;
+
   return 0;  // Success
 }

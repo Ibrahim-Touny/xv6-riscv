@@ -45,3 +45,4 @@ entry("countsyscall");
 entry("datetime");
 entry("getptable");
 entry("setsched");
+entry("perfmetrics");

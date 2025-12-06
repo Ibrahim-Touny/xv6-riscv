@@ -162,6 +162,7 @@ UPROGS=\
 	$U/_schedtest\
 	$U/_ps\
 	$U/_setsched\
+	$U/_perfmetrics\
 
 
 # Add Command Files up to UPROGS

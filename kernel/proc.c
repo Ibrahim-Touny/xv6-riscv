@@ -6,6 +6,7 @@
 #include "proc.h"
 #include "defs.h"
 #include "ptable.h" // include the ptable struct definition
+#include "perfmetrics.h" // include the perfmetrics struct definition
 
 // schedular constants to set the scheduling mode
 #define SCHED_ROUND_ROBIN 0
@@ -159,6 +160,7 @@ found:
 	// initialize new variables here
   p->creation_time = ticks;
   p->run_time = 0;
+  p->completion_time = 0;
   p->priority = PRIORITY;
   return p;
 }
@@ -369,6 +371,8 @@ exit(int status)
   if(p == initproc)
     panic("init exiting");
 
+  p->completion_time = ticks;
+
   // Close all open files.
   for(int fd = 0; fd < NOFILE; fd++){
     if(p->ofile[fd]){
@@ -502,6 +506,41 @@ struct proc *choose_next_process() {
   }
 
   return 0;
+}
+
+// Calculate performance metrics for completed processes
+void
+perfmetrics(struct perfmetrics *pm){
+  struct proc *p;
+  uint total_turnaround_time = 0;
+  uint total_waiting_time = 0;
+  int count = 0;
+  for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+
+    if(p->completion_time > 0 && p->creation_time > 0) {
+      uint turnaround_time = p->completion_time - p->creation_time;
+      uint wt = turnaround_time - p->run_time;
+
+      total_turnaround_time += turnaround_time;
+      total_waiting_time += wt;
+      count++;
+    }
+    release(&p->lock);
+  }
+  if (count > 0) {
+    pm->num_processes = count;
+    pm->total_turnaround_time = total_turnaround_time;
+    pm->total_waiting_time = total_waiting_time;
+    pm->avg_turnaround_time = total_turnaround_time / count;
+    pm->avg_waiting_time = total_waiting_time / count;
+  } else { // no completed processes, so set all metrics to zero
+    pm->num_processes = 0;
+    pm->total_turnaround_time = 0;
+    pm->total_waiting_time = 0;
+    pm->avg_turnaround_time = 0;
+    pm->avg_waiting_time = 0;
+  }
 }
 
 // Copy process table to user buffer, return 1 on success, 0 on failure

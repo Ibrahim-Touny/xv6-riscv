@@ -1,6 +1,7 @@
 struct stat;
 // datetime structure, must be added for datetime syscall
 struct datetime;
+struct perfmetrics;
 
 // system calls
 int fork(void);
@@ -34,6 +35,7 @@ int uptime(void);
 int datetime(struct datetime *dt);
 int getptable(int nproc, char *buffer);
 int setsched(int mode);
+int perfmetrics(struct perfmetrics *pm);
 
 // ulib.c
 int stat(const char*, struct stat*);
