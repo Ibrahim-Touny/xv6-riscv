@@ -108,4 +108,5 @@ struct proc {
   uint run_time;               // How long the process has run
   uint completion_time;        // Ticks when process completed
   uint priority;               // Process priority yasmine eli aamlah gad3ana mn aandaha
+  int sched_mode;              // Current scheduling mode
 };

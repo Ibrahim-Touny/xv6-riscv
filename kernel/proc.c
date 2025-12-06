@@ -17,6 +17,9 @@
 
 extern int sched_mode;  // Declare global scheduler mode
 
+struct perfmetrics metrics;
+struct spinlock metrics_lock;
+
 struct cpu cpus[NCPU];
 
 struct proc proc[NPROC];
@@ -62,6 +65,9 @@ procinit(void)
 
   initlock(&pid_lock, "nextpid");
   initlock(&wait_lock, "wait_lock");
+  initlock(&metrics_lock, "metrics_lock"); // initialize metrics lock
+  memset(&metrics, 0, sizeof(metrics)); // initialize metrics to zero
+
   for(p = proc; p < &proc[NPROC]; p++) {
       initlock(&p->lock, "proc");
       p->state = UNUSED;
@@ -373,6 +379,35 @@ exit(int status)
 
   p->completion_time = ticks;
 
+  uint turnaround_time = p->completion_time - p->creation_time;
+  uint waiting_time = turnaround_time - p->run_time;
+
+  // update global metrics, so we need to lock
+  acquire(&metrics_lock);
+
+  metrics.total_num_processes++;
+
+  // choose bucket by p->sched_mode (or p->sched_used)
+  switch (p->sched_mode) {
+  case SCHED_ROUND_ROBIN:
+    metrics.rr_num_processes++;
+    metrics.rr_turnaround_time += turnaround_time;
+    metrics.rr_waiting_time += waiting_time;
+    break;
+  case SCHED_FCFS:
+    metrics.fcfs_num_processes++;
+    metrics.fcfs_turnaround_time += turnaround_time;
+    metrics.fcfs_waiting_time += waiting_time;
+    break;
+  case SCHED_PRIORITY_BASED:
+    metrics.pb_num_processes++;
+    metrics.pb_turnaround_time += turnaround_time;
+    metrics.pb_waiting_time += waiting_time;
+    break;
+  }
+
+  release(&metrics_lock);
+
   // Close all open files.
   for(int fd = 0; fd < NOFILE; fd++){
     if(p->ofile[fd]){
@@ -456,7 +491,7 @@ wait(uint64 addr)
   }
 }
 
-int sched_mode = SCHED_ROUND_ROBIN;  // Assign the chosen scheduler here
+int sched_mode = SCHED_ROUND_ROBIN;  // Default scheduling mode
 struct proc *choose_next_process() {
   struct proc *p;
 
@@ -510,37 +545,39 @@ struct proc *choose_next_process() {
 
 // Calculate performance metrics for completed processes
 void
-perfmetrics(struct perfmetrics *pm){
-  struct proc *p;
-  uint total_turnaround_time = 0;
-  uint total_waiting_time = 0;
-  int count = 0;
-  for(p = proc; p < &proc[NPROC]; p++) {
-    acquire(&p->lock);
+perfmetrics(struct perfmetrics *pm)
+{
+  acquire(&metrics_lock);
 
-    if(p->completion_time > 0 && p->creation_time > 0) {
-      uint turnaround_time = p->completion_time - p->creation_time;
-      uint wt = turnaround_time - p->run_time;
+  // compute averages per scheduler if counts > 0
+  // Round Robin Scheduling averages
+  if (metrics.rr_num_processes > 0) {
+    metrics.rr_avg_turnaround_time = metrics.rr_turnaround_time / metrics.rr_num_processes;
+    metrics.rr_avg_waiting_time    = metrics.rr_waiting_time    / metrics.rr_num_processes;
+  } else {
+    metrics.rr_avg_turnaround_time = metrics.rr_avg_waiting_time = 0;
+  }
 
-      total_turnaround_time += turnaround_time;
-      total_waiting_time += wt;
-      count++;
-    }
-    release(&p->lock);
+  // FCFS Scheduling averages
+  if (metrics.fcfs_num_processes > 0) {
+    metrics.fcfs_avg_turnaround_time = metrics.fcfs_turnaround_time / metrics.fcfs_num_processes;
+    metrics.fcfs_avg_waiting_time    = metrics.fcfs_waiting_time    / metrics.fcfs_num_processes;
+  } else {
+    metrics.fcfs_avg_turnaround_time = metrics.fcfs_avg_waiting_time = 0;
   }
-  if (count > 0) {
-    pm->num_processes = count;
-    pm->total_turnaround_time = total_turnaround_time;
-    pm->total_waiting_time = total_waiting_time;
-    pm->avg_turnaround_time = total_turnaround_time / count;
-    pm->avg_waiting_time = total_waiting_time / count;
-  } else { // no completed processes, so set all metrics to zero
-    pm->num_processes = 0;
-    pm->total_turnaround_time = 0;
-    pm->total_waiting_time = 0;
-    pm->avg_turnaround_time = 0;
-    pm->avg_waiting_time = 0;
+
+  // Priority-Based Scheduling averages
+  if (metrics.pb_num_processes > 0) {
+    metrics.pb_avg_turnaround_time = metrics.pb_turnaround_time / metrics.pb_num_processes;
+    metrics.pb_avg_waiting_time    = metrics.pb_waiting_time    / metrics.pb_num_processes;
+  } else {
+    metrics.pb_avg_turnaround_time = metrics.pb_avg_waiting_time = 0;
   }
+
+  // copy metrics to user-provided struct
+  *pm = metrics;
+
+  release(&metrics_lock);
 }
 
 // Copy process table to user buffer, return 1 on success, 0 on failure
