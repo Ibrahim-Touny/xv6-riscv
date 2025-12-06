@@ -454,53 +454,52 @@ wait(uint64 addr)
 
 int sched_mode = SCHED_ROUND_ROBIN;  // Assign the chosen scheduler here
 struct proc *choose_next_process() {
-
   struct proc *p;
 
-  if(sched_mode == SCHED_ROUND_ROBIN) {
+  if(sched_mode == SCHED_ROUND_ROBIN) { // Round Robin Scheduling
     for(p = proc; p < &proc[NPROC]; p++) {
       if (p->state == RUNNABLE)
         return p;
       }
   }
 
-    if (sched_mode == SCHED_FCFS) {
-      int creation_time_current=10000;
-      struct proc *firstcomeproc = 0;
-     for(p = proc; p < &proc[NPROC]; p++) {
+  if (sched_mode == SCHED_FCFS) { // First-Come, First-Served (FCFS) Scheduling
+    int creation_time_current=10000;
+    struct proc *firstcomeproc = 0;
+    for(p = proc; p < &proc[NPROC]; p++) {
       if(p->state == RUNNABLE){
-        if(p->creation_time  < creation_time_current)
-        creation_time_current=p->creation_time;
-        firstcomeproc=p;
+        if(p->creation_time  < creation_time_current) {
+          creation_time_current=p->creation_time;
+          firstcomeproc=p;
+        }
       }
     }
-     return firstcomeproc;
+    return firstcomeproc;
   }
 
-    if(sched_mode == SCHED_PRIORITY_BASED) {
-      //el priority eli hatgetheseb aala 7asab kam el wa2t eli el process shaghala feeh
-      int effective_priority;
-      //hanhot feh a3la priority aandena gahza
-      struct proc *best_proc;
-      //rakam kebeer initially aalashan ay process hatkoon a2al menno hyb2a howa el best
-      //bysghar baaden keda 34an a3raf akhtar a2al wa7ed
-      int best_priority =10000 ;
+  if(sched_mode == SCHED_PRIORITY_BASED) { // Priority-Based Scheduling
+    //el priority eli hatgetheseb aala 7asab kam el wa2t eli el process shaghala feeh
+    int effective_priority;
+    //hanhot feh a3la priority aandena gahza
+    struct proc *best_proc = 0;
+    //rakam kebeer initially aalashan ay process hatkoon a2al menno hyb2a howa el best
+    //bysghar baaden keda 34an a3raf akhtar a2al wa7ed
+    int best_priority =10000 ;
     for(p = proc; p < &proc[NPROC]; p++) {
       if (p->state == RUNNABLE) {
-      //benehseb el effective priority aala asas el runtime beta3o (for every 100 ticks hynazel el priority by 1)
-      //ely byakho aktar wa2t hyb2a priority beta3o a2al alashan n prevent starvation w convoy effect
-        effective_priority = p->priority - (p->run_time / 100);}
+        //benehseb el effective priority aala asas el runtime beta3o (for every 100 ticks hynazel el priority by 1)
+        //ely byakho aktar wa2t hyb2a priority beta3o a2al alashan n prevent starvation w convoy effect
+        effective_priority = p->priority - (p->run_time / 100);
         //law el effective priority beta3o a2al men eli mawgoda
         //nehoto fe el best priority w tebaa heya el best process eli haterga3 w tetnafez
         if (effective_priority < best_priority) {
           best_priority = effective_priority;
           best_proc = p;
         }
-        return best_proc;
+      }
     }
+    return best_proc;
   }
-
-  // Add more else statements each time you create a new scheduler
 
   return 0;
 }
