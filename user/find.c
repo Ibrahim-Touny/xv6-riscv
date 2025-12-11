@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 {
   if(argc == 2 && strcmp(argv[1], "?") == 0)
   {
-    printf("Usage: find <start_directory> <filename>\n");
+    printf("Usage: find <start_directory> <filename> or find <filename>\n");
     exit(0);
   }
 

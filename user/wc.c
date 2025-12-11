@@ -90,17 +90,20 @@ int main(int argc, char *argv[])
   // If no arguments are given (just 'wc'),
   // read from standard input (fd = 0).
   if(argc <= 1){
-    wc(0, "");   // name is empty because stdin has no filename
+    // Default flags when reading from stdin: lines, words, chars
+    lflag = wflag = cflag = 1;
+    wc(0, "stdin");   // label the source for clarity
     exit(0);
   }
 
-  if(argc >= 2 && strcmp(argv[1], "?") == 0){
+  if(argc == 2 && strcmp(argv[1], "?") == 0){
     printf("Usage: wc [-lwcL] [file...]\n");
     printf("  -l : print line counts\n");
     printf("  -w : print word counts\n");
     printf("  -c : print character counts\n");
     printf("  -L : print length of longest line\n");
     printf("Output: LineCount WordCount CharacterCount LongestLineLength FileName\n");
+    printf("Default (no flags): -lwc: LineCount WordCount CharacterCount\n");
     exit(0);
   }
 
