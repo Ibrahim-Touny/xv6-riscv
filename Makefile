@@ -168,6 +168,7 @@ UPROGS=\
 	$U/_ps\
 	$U/_setsched\
 	$U/_perfmetrics\
+	$U/_tperf\
 
 
 # Add Command Files up to UPROGS
