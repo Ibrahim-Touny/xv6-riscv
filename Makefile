@@ -83,6 +83,11 @@ endif
 # Add DateTime syscall support
 CFLAGS += -DBOOT_EPOCH=$(shell date +%s)
 
+# Always rebuild sysutil.o so BOOT_EPOCH reflects the current build time
+$K/sysutil.o: FORCE
+
+FORCE:
+
 LDFLAGS = -z max-page-size=4096
 
 $K/kernel: $(OBJS) $K/kernel.ld $U/initcode
